@@ -20,20 +20,26 @@ The system uses four specialized agents:
 
 ## Setup
 
-1. Install dependencies:
+1. Create a virtual environment:
+```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
 ```bash
    pip install -r requirements.txt
 ```
 
-2. Set environment variables:
+3. Set environment variables:
 ```bash
    export AZURE_OPENAI_KEY="your-key"
    export AZURE_OPENAI_ENDPOINT="https://your-resource.cognitiveservices.azure.com/"
 ```
 
-3. Run the system:
+4. Run the system:
 ```bash
-   python research_agent.py
+   python research_agent_rag.py
 ```
 
 ## Technical Stack
