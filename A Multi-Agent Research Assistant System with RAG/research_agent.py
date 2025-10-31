@@ -672,16 +672,31 @@ Analyze this information and extract key insights."""
         )
         
         try:
-            analysis_data = json.loads(response)
+            # Try to extract JSON from response (sometimes LLM adds explanatory text)
+            response_clean = response.strip()
+            
+            # Look for JSON content between braces if there's extra text
+            if response_clean.startswith('{'):
+                json_end = response_clean.rfind('}') + 1
+                response_clean = response_clean[:json_end]
+            elif '{' in response_clean:
+                json_start = response_clean.index('{')
+                json_end = response_clean.rfind('}') + 1
+                response_clean = response_clean[json_start:json_end]
+            
+            analysis_data = json.loads(response_clean)
             insights = [AnalyzedInsight(**insight) for insight in analysis_data["insights"]]
             print(f"[{self.name}] Extracted {len(insights)} insights")
             return insights
             
-        except json.JSONDecodeError as e:
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
             print(f"[{self.name}] Failed to parse analysis: {e}")
+            print(f"[{self.name}] Raw response: {response[:200]}...")
+            
+            # Fallback: create basic insights from the response text
             return [AnalyzedInsight(
-                insight="Analysis could not be structured properly",
-                supporting_sources=["all"],
+                insight=f"Analysis response was not properly structured. Raw content available.",
+                supporting_sources=["multiple sources"],
                 confidence="low",
                 theme="general"
             )]
