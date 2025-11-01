@@ -9,6 +9,13 @@ import chromadb
 import PyPDF2
 from pathlib import Path
 import hashlib
+import uuid
+from evaluation_monitoring import (
+    PerformanceMonitor,
+    EvaluationOrchestrator,
+    AgentExecutionLog,
+    evaluate_research_pipeline
+)
 
 
 # ============================================================================
@@ -784,15 +791,15 @@ Write a comprehensive research report with proper citations."""
 
 
 # ============================================================================
-# ORCHESTRATOR
+# MONITORED ORCHESTRATOR (Enhanced version)
 # ============================================================================
 
-class RAGResearchOrchestrator:
+class MonitoredRAGResearchOrchestrator:
     """
-    Orchestrator for RAG-enhanced multi-agent research system.
+    Enhanced orchestrator with integrated monitoring and evaluation.
     """
     
-    def __init__(self, client: AzureOpenAIClient, vector_store: VectorStore):
+    def __init__(self, client, vector_store):
         self.client = client
         self.vector_store = vector_store
         self.coordinator = CoordinatorAgent(client)
@@ -800,11 +807,11 @@ class RAGResearchOrchestrator:
         self.analyzer = AnalyzerAgent(client)
         self.writer = WriterAgent(client)
         
+        # Add evaluation components
+        self.evaluator = EvaluationOrchestrator(client.client)
+        
     async def ingest_documents(self, document_paths: List[str]):
-        """
-        Ingest documents into the vector store.
-        This is the data pipeline component.
-        """
+        """Document ingestion with monitoring."""
         print(f"\n{'='*60}")
         print(f"DOCUMENT INGESTION PIPELINE")
         print(f"{'='*60}\n")
@@ -828,29 +835,132 @@ class RAGResearchOrchestrator:
         
         print(f"{'='*60}\n")
         
-    async def conduct_research(self, question: str) -> ResearchReport:
-        """Execute the full RAG-enhanced research pipeline."""
-        print(f"\n{'='*60}")
-        print(f"STARTING RAG-ENHANCED RESEARCH: {question}")
-        print(f"{'='*60}\n")
-        
-        # Step 1: Planning
-        plan = await self.coordinator.create_plan(question)
-        
-        # Step 2: RAG Research (retrieval + generation)
-        results = await self.researcher.gather_all_information(plan)
-        
-        # Step 3: Analysis
-        insights = await self.analyzer.analyze_results(question, results)
-        
-        # Step 4: Writing with citations
-        report = await self.writer.write_report(question, plan, insights, results)
+    async def conduct_research(self, question: str, enable_evaluation: bool = True):
+        """
+        Execute research with integrated monitoring and evaluation.
+        """
+        trace_id = str(uuid.uuid4())
+        monitor = PerformanceMonitor()
+        monitor.start_operation()
         
         print(f"\n{'='*60}")
-        print(f"RESEARCH COMPLETED")
+        print(f"STARTING MONITORED RESEARCH")
+        print(f"Trace ID: {trace_id}")
+        print(f"Question: {question}")
         print(f"{'='*60}\n")
         
-        return report
+        all_retrieved_contexts = []
+        
+        try:
+            # Step 1: Coordinator
+            monitor.start_agent("Coordinator")
+            tokens_before = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            
+            plan = await self.coordinator.create_plan(question)
+            
+            tokens_after = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            monitor.end_agent("Coordinator", tokens_after - tokens_before)
+            
+            self.evaluator.logger.log_agent_execution(AgentExecutionLog(
+                trace_id=trace_id,
+                agent_name="Coordinator",
+                timestamp=datetime.now().isoformat(),
+                input_summary=f"Question: {question[:100]}...",
+                output_summary=f"Created {len(plan.tasks)} tasks",
+                latency_seconds=monitor.agent_latencies.get("Coordinator", 0),
+                tokens_used=tokens_after - tokens_before,
+                success=True
+            ))
+            
+            # Step 2: Researcher
+            monitor.start_agent("Researcher")
+            tokens_before = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            
+            results = await self.researcher.gather_all_information(plan)
+            
+            # Collect all retrieved contexts for evaluation
+            for result in results:
+                all_retrieved_contexts.extend(result.retrieved_contexts)
+            
+            tokens_after = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            monitor.end_agent("Researcher", tokens_after - tokens_before)
+            
+            self.evaluator.logger.log_agent_execution(AgentExecutionLog(
+                trace_id=trace_id,
+                agent_name="Researcher",
+                timestamp=datetime.now().isoformat(),
+                input_summary=f"Researching {len(plan.tasks)} tasks",
+                output_summary=f"Found {len(all_retrieved_contexts)} relevant contexts",
+                latency_seconds=monitor.agent_latencies.get("Researcher", 0),
+                tokens_used=tokens_after - tokens_before,
+                success=True
+            ))
+            
+            # Step 3: Analyzer
+            monitor.start_agent("Analyzer")
+            tokens_before = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            
+            insights = await self.analyzer.analyze_results(question, results)
+            
+            tokens_after = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            monitor.end_agent("Analyzer", tokens_after - tokens_before)
+            
+            self.evaluator.logger.log_agent_execution(AgentExecutionLog(
+                trace_id=trace_id,
+                agent_name="Analyzer",
+                timestamp=datetime.now().isoformat(),
+                input_summary=f"Analyzing {len(results)} search results",
+                output_summary=f"Extracted {len(insights)} insights",
+                latency_seconds=monitor.agent_latencies.get("Analyzer", 0),
+                tokens_used=tokens_after - tokens_before,
+                success=True
+            ))
+            
+            # Step 4: Writer
+            monitor.start_agent("Writer")
+            tokens_before = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            
+            report = await self.writer.write_report(question, plan, insights, results)
+            
+            tokens_after = self.client.tracker.total_input_tokens + self.client.tracker.total_output_tokens
+            monitor.end_agent("Writer", tokens_after - tokens_before)
+            
+            self.evaluator.logger.log_agent_execution(AgentExecutionLog(
+                trace_id=trace_id,
+                agent_name="Writer",
+                timestamp=datetime.now().isoformat(),
+                input_summary=f"Synthesizing {len(insights)} insights",
+                output_summary=f"Generated report ({len(report.detailed_findings)} chars)",
+                latency_seconds=monitor.agent_latencies.get("Writer", 0),
+                tokens_used=tokens_after - tokens_before,
+                success=True
+            ))
+            
+            print(f"\n{'='*60}")
+            print(f"RESEARCH COMPLETED")
+            print(f"{'='*60}\n")
+            
+            # Step 5: Evaluation (if enabled)
+            if enable_evaluation:
+                eval_result = await evaluate_research_pipeline(
+                    self.client.client,
+                    question,
+                    report,
+                    all_retrieved_contexts,
+                    monitor
+                )
+            
+            return report
+            
+        except Exception as e:
+            monitor.record_error(str(e))
+            self.evaluator.logger.log_error(
+                trace_id=trace_id,
+                error_type=type(e).__name__,
+                error_message=str(e),
+                context={'question': question}
+            )
+            raise
 
 
 # ============================================================================
@@ -858,14 +968,14 @@ class RAGResearchOrchestrator:
 # ============================================================================
 
 async def main():
-    """Main function demonstrating the RAG-enhanced research system."""
+    """Main function with evaluation enabled."""
     
     # Setup
     api_key = os.getenv("AZURE_OPENAI_KEY")
     endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
     
     if not api_key or not endpoint:
-        print("Error: Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT environment variables")
+        print("Error: Please set AZURE_OPENAI_KEY and AZURE_OPENAI_ENDPOINT")
         return
     
     # Initialize
@@ -873,11 +983,10 @@ async def main():
     client = AzureOpenAIClient(api_key, endpoint, tracker)
     vector_store = VectorStore(collection_name="research_documents")
     
-    # Create orchestrator
-    orchestrator = RAGResearchOrchestrator(client, vector_store)
+    # Create MONITORED orchestrator (this is the key change)
+    orchestrator = MonitoredRAGResearchOrchestrator(client, vector_store)
     
-    # Example 1: Ingest documents
-    # Place your documents in a 'documents' folder
+    # Ingest documents
     document_folder = "documents"
     if os.path.exists(document_folder):
         document_paths = [
@@ -887,12 +996,9 @@ async def main():
         ]
         
         if document_paths:
-            print(f"Found {len(document_paths)} documents to ingest")
             await orchestrator.ingest_documents(document_paths)
         else:
-            print("No documents found in 'documents' folder")
-            print("Creating sample document for demonstration...")
-            # Create a sample document if none exists
+            # Create sample document
             os.makedirs(document_folder, exist_ok=True)
             sample_doc = os.path.join(document_folder, "sample.txt")
             with open(sample_doc, 'w') as f:
@@ -902,65 +1008,50 @@ Transformer Architecture Improvements
 Recent developments in transformer architectures have focused on several key areas:
 
 1. Sparse Attention Mechanisms: Longformer and BigBird introduced sparse attention patterns 
-that reduce the quadratic complexity of standard transformers to linear complexity. This 
-enables processing of much longer sequences (up to 16,384 tokens) while maintaining 
-performance.
+that reduce the quadratic complexity of standard transformers to linear complexity.
 
-2. Mixture of Experts (MoE): Switch Transformers and GLaM demonstrated that using sparse 
-MoE layers can dramatically increase model capacity while keeping computational costs 
-manageable. Each token is routed to only a subset of expert networks, allowing models 
-to scale to trillions of parameters.
+2. Mixture of Experts (MoE): Switch Transformers demonstrated that using sparse MoE layers 
+can dramatically increase model capacity while keeping computational costs manageable.
 
-3. Efficient Attention: Flash Attention and its successor Flash Attention 2 optimized the 
-memory access patterns of attention computation, achieving 2-4x speedups while using 
-less memory. This is critical for training larger models on available hardware.
+3. Efficient Attention: Flash Attention optimized memory access patterns of attention 
+computation, achieving 2-4x speedups.
 
-4. Rotary Position Embeddings (RoPE): Introduced in RoFormer and adopted by many modern 
-LLMs including LLaMA, RoPE encodes position information more effectively than absolute 
-or learned position embeddings, improving length extrapolation capabilities.
-
-5. Group Query Attention (GQA): Used in LLaMA 2 and other models, GQA reduces the memory 
-bandwidth requirements of the key-value cache during inference while maintaining model 
-quality, enabling faster generation on consumer hardware.
+4. Rotary Position Embeddings (RoPE): Encodes position information more effectively than 
+absolute or learned position embeddings.
                 """)
-            print(f"Created sample document: {sample_doc}")
             await orchestrator.ingest_documents([sample_doc])
-    else:
-        print(f"Creating 'documents' folder...")
-        os.makedirs(document_folder, exist_ok=True)
-        print("Please add PDF or text documents to the 'documents' folder and run again")
-        return
     
-    # Example 2: Conduct research
-    # question = "What are the recent improvements in transformer architectures for handling long contexts?"
-    question = "What are the contributions of AI to cyber security?"
+    # Run multiple queries to build evaluation history
+    questions = [
+        "What are the recent improvements in AI for handling cyber security challenges?",
+        "How do machines can interact with humans?",
+        "What are the latest unresolved issues in AI?"
+    ]
     
-    report = await orchestrator.conduct_research(question)
+    for question in questions:
+        print(f"\n\n{'#'*60}")
+        print(f"QUERY: {question}")
+        print(f"{'#'*60}")
+        
+        report = await orchestrator.conduct_research(question, enable_evaluation=True)
+        
+        # Display report
+        print("\n" + "="*60)
+        print("RESEARCH REPORT")
+        print("="*60 + "\n")
+        print(f"Question: {report.question}\n")
+        print(f"Executive Summary:\n{report.executive_summary}\n")
+        print(f"\nKey Insights:")
+        for i, insight in enumerate(report.key_insights, 1):
+            print(f"{i}. {insight}")
+        
+        print(f"\n\nSources: {', '.join(report.sources)}")
     
-    # Display results
-    print("\n" + "="*60)
-    print("FINAL RESEARCH REPORT")
-    print("="*60 + "\n")
-    print(f"Question: {report.question}\n")
-    print(f"Executive Summary:\n{report.executive_summary}\n")
-    print(f"\nDetailed Findings:\n{report.detailed_findings}\n")
-    print(f"\nKey Insights:")
-    for i, insight in enumerate(report.key_insights, 1):
-        print(f"{i}. {insight}")
-    
-    print(f"\n\nSources Cited:")
-    for source in report.sources:
-        print(f"  - {source}")
-    
-    print(f"\n\nCitation Details:")
-    unique_citations = {}
-    for citation in report.citations:
-        key = (citation['source'], citation.get('page', 'N/A'))
-        if key not in unique_citations:
-            unique_citations[key] = citation
-    
-    for (source, page), citation in unique_citations.items():
-        print(f"  [{source}, Page: {page}] - Relevance: {citation['relevance']:.2f}")
+    # Show performance trends
+    print("\n\n" + "="*60)
+    print("ANALYZING PERFORMANCE TRENDS")
+    print("="*60)
+    orchestrator.evaluator.compare_recent_performance(n=len(questions))
     
     # Show cost tracking
     tracker.report()
