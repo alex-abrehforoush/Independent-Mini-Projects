@@ -1,3 +1,100 @@
 archive.zip
 *.pth
 UCF50/
+
+# ----------------------------------------
+# Python build and cache files
+# ----------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+*.pyd
+
+# ----------------------------------------
+# Virtual environments
+# ----------------------------------------
+venv/
+.env/
+.venv/
+env/
+ENV/
+*.env
+*.venv
+
+# ----------------------------------------
+# Jupyter & IPython
+# ----------------------------------------
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+*.ipynb~
+
+# ----------------------------------------
+# Logs and profiling
+# ----------------------------------------
+*.log
+*.out
+*.err
+*.prof
+*.pstats
+
+# ----------------------------------------
+# PyTorch / ML
+# ----------------------------------------
+runs/                  # TensorBoard logs (from torch.utils.tensorboard)
+checkpoints/
+models/
+*.pth
+*.pt
+*.onnx
+
+# ----------------------------------------
+# Data and temporary files
+# ----------------------------------------
+data/
+datasets/
+tmp/
+temp/
+*.npy
+*.npz
+*.csv
+*.h5
+*.pkl
+*.pickle
+
+# ----------------------------------------
+# IDE and OS-specific files
+# ----------------------------------------
+# VSCode
+.vscode/
+# PyCharm
+.idea/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+Desktop.ini
+
+# ----------------------------------------
+# Packaging
+# ----------------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# ----------------------------------------
+# Miscellaneous
+# ----------------------------------------
+*.bak
+*.swp
+*.swo
+*.orig
+*.tmp

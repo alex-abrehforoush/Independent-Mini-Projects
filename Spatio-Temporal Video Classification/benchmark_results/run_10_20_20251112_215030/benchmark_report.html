@@ -1,0 +1,338 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>UCF50 Benchmark Report</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 40px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #333;
+            }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                background: white;
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            }
+            h1 {
+                color: #667eea;
+                text-align: center;
+                font-size: 2.5em;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+            .subtitle {
+                text-align: center;
+                color: #666;
+                font-size: 1.2em;
+                margin-bottom: 40px;
+            }
+            .summary {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+            .summary-card {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 25px;
+                border-radius: 15px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                transition: transform 0.3s;
+            }
+            .summary-card:hover {
+                transform: translateY(-5px);
+            }
+            .summary-card h3 {
+                margin: 0 0 10px 0;
+                font-size: 0.9em;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .summary-card .value {
+                font-size: 2.5em;
+                font-weight: bold;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 30px 0;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            th {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 15px;
+                text-align: left;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-size: 0.9em;
+            }
+            td {
+                padding: 15px;
+                border-bottom: 1px solid #ddd;
+            }
+            tr:hover {
+                background-color: #f5f5f5;
+            }
+            .best {
+                background-color: #ffd700 !important;
+                font-weight: bold;
+            }
+            .images-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+                gap: 30px;
+                margin: 30px 0;
+            }
+            .image-container {
+                border: 2px solid #ddd;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            .image-container img {
+                width: 100%;
+                display: block;
+            }
+            .image-title {
+                background: #667eea;
+                color: white;
+                padding: 15px;
+                text-align: center;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .section {
+                margin: 50px 0;
+            }
+            .section-title {
+                font-size: 2em;
+                color: #667eea;
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
+            .info-box {
+                background: #f8f9fa;
+                border-left: 5px solid #667eea;
+                padding: 20px;
+                margin: 20px 0;
+                border-radius: 5px;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 50px;
+                padding-top: 30px;
+                border-top: 2px solid #ddd;
+                color: #666;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🎬 UCF50 Video Classification Benchmark</h1>
+            <div class="subtitle">
+                Classes 10-19 | 5 Models Trained | 20 Frames
+            </div>
+            
+            <div class="summary">
+                <div class="summary-card">
+                    <h3>🏆 Best Model</h3>
+                    <div class="value">Late Fusion</div>
+                    <div>94.95% Accuracy</div>
+                </div>
+                <div class="summary-card">
+                    <h3>⚡ Fastest Training</h3>
+                    <div class="value">25.3m</div>
+                    <div>Early Fusion</div>
+                </div>
+                <div class="summary-card">
+                    <h3>💾 Smallest Model</h3>
+                    <div class="value">0.5M</div>
+                    <div>Conv Lstm</div>
+                </div>
+                <div class="summary-card">
+                    <h3>📊 Avg Accuracy</h3>
+                    <div class="value">89.7%</div>
+                    <div>Across all models</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📈 Results Table</div>
+                <table>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Model</th>
+                        <th>Val Accuracy</th>
+                        <th>Train Accuracy</th>
+                        <th>Parameters</th>
+                        <th>Training Time</th>
+                        <th>Best Epoch</th>
+                    </tr>
+    
+                    <tr class="best">
+                        <td>1</td>
+                        <td><strong>Late Fusion</strong></td>
+                        <td>94.95%</td>
+                        <td>99.82%</td>
+                        <td>11.18M</td>
+                        <td>46.7 min</td>
+                        <td>34</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td>2</td>
+                        <td><strong>Single Frame</strong></td>
+                        <td>94.58%</td>
+                        <td>99.91%</td>
+                        <td>11.18M</td>
+                        <td>52.3 min</td>
+                        <td>45</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td>3</td>
+                        <td><strong>Early Fusion</strong></td>
+                        <td>90.61%</td>
+                        <td>99.73%</td>
+                        <td>11.36M</td>
+                        <td>25.3 min</td>
+                        <td>40</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td>4</td>
+                        <td><strong>Conv Lstm</strong></td>
+                        <td>84.48%</td>
+                        <td>99.91%</td>
+                        <td>0.52M</td>
+                        <td>43.0 min</td>
+                        <td>50</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td>5</td>
+                        <td><strong>Cnn Lstm</strong></td>
+                        <td>84.12%</td>
+                        <td>95.74%</td>
+                        <td>12.49M</td>
+                        <td>49.2 min</td>
+                        <td>47</td>
+                    </tr>
+        
+                </table>
+            </div>
+            
+            <div class="info-box">
+                <strong>📝 Dataset Information:</strong><br>
+                Classes: GolfSwing, HighJump, HorseRace, HorseRiding, HulaHoop, JavelinThrow, JugglingBalls, JumpRope, JumpingJack, Kayaking<br>
+                Frames per video: 20<br>
+                Random Seed: 42<br>
+                Device: cuda
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📊 Comparison Visualizations</div>
+                <div class="images-grid">
+                    <div class="image-container">
+                        <div class="image-title">Accuracy & Time Comparison</div>
+                        <img src="comparison_bars.png" alt="Comparison">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">Model Efficiency</div>
+                        <img src="efficiency_score.png" alt="Efficiency">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">Performance vs Complexity</div>
+                        <img src="params_vs_accuracy.png" alt="Complexity">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">Performance Radar</div>
+                        <img src="radar_chart.png" alt="Radar">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📉 Training Curves</div>
+                <div class="images-grid">
+    
+                    <div class="image-container">
+                        <div class="image-title">Single Frame</div>
+                        <img src="single_frame_history.png" alt="single_frame history">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Early Fusion</div>
+                        <img src="early_fusion_history.png" alt="early_fusion history">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Late Fusion</div>
+                        <img src="late_fusion_history.png" alt="late_fusion history">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Cnn Lstm</div>
+                        <img src="cnn_lstm_history.png" alt="cnn_lstm history">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Conv Lstm</div>
+                        <img src="conv_lstm_history.png" alt="conv_lstm history">
+                    </div>
+        
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">🔥 Confusion Matrices</div>
+                <div class="images-grid">
+    
+                    <div class="image-container">
+                        <div class="image-title">Single Frame</div>
+                        <img src="single_frame_confusion.png" alt="single_frame confusion">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Early Fusion</div>
+                        <img src="early_fusion_confusion.png" alt="early_fusion confusion">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Late Fusion</div>
+                        <img src="late_fusion_confusion.png" alt="late_fusion confusion">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Cnn Lstm</div>
+                        <img src="cnn_lstm_confusion.png" alt="cnn_lstm confusion">
+                    </div>
+        
+                    <div class="image-container">
+                        <div class="image-title">Conv Lstm</div>
+                        <img src="conv_lstm_confusion.png" alt="conv_lstm confusion">
+                    </div>
+        
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p><strong>Generated:</strong> 2025-11-13 01:27:44</p>
+                <p>UCF50 Video Classification Benchmark | PyTorch Implementation</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    

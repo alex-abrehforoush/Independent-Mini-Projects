@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCF50 Video Classification Benchmark Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .chart-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        th {
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .rank-1 { background: #FFD700; }
+        .rank-2 { background: #C0C0C0; }
+        .rank-3 { background: #CD7F32; }
+        .rank-other { background: #667eea; }
+
+        .model-name {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card, .chart-container, .table-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .footer {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>🎬 UCF50 Benchmark</h1>
+            <p>Comprehensive Video Classification Analysis</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value">CNN+LSTM</div>
+                <div class="stat-label">Best Model</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">78.5%</div>
+                <div class="stat-label">Highest Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-value">32.4m</div>
+                <div class="stat-label">Fastest Training</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💾</div>
+                <div class="stat-value">11.7M</div>
+                <div class="stat-label">Smallest Model</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">Model Accuracy Comparison</div>
+                <canvas id="accuracyChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Training Time Analysis</div>
+                <canvas id="timeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">Performance vs Complexity</div>
+                <canvas id="scatterChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Model Efficiency Score</div>
+                <canvas id="efficiencyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="chart-title">Detailed Benchmark Results</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Model</th>
+                        <th>Validation Accuracy</th>
+                        <th>Training Accuracy</th>
+                        <th>Parameters</th>
+                        <th>Training Time</th>
+                        <th>Efficiency</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTable"></tbody>
+            </table>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">Training Convergence</div>
+                <canvas id="convergenceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Model Architecture Distribution</div>
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>UCF50 Video Classification Benchmark</strong></p>
+            <p>PyTorch Implementation | 5 Model Architectures | 20 Frames per Video</p>
+            <p>Seed: 42 | Device: CUDA | Generated: 2024</p>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - replace with actual results
+        const models = ['CNN+LSTM', 'ConvLSTM', 'Late Fusion', 'Early Fusion', 'Single Frame'];
+        const accuracies = [78.5, 76.2, 74.8, 71.3, 68.9];
+        const trainAccuracies = [92.3, 89.7, 88.4, 85.2, 82.1];
+        const trainingTimes = [45.2, 52.8, 38.5, 42.1, 32.4];
+        const parameters = [12.5, 15.3, 11.7, 24.8, 11.7];
+        const efficiency = accuracies.map((acc, i) => acc / trainingTimes[i]);
+
+        // Accuracy Chart
+        new Chart(document.getElementById('accuracyChart'), {
+            type: 'bar',
+            data: {
+                labels: models,
+                datasets: [{
+                    label: 'Validation Accuracy (%)',
+                    data: accuracies,
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(237, 100, 166, 0.8)',
+                        'rgba(255, 154, 158, 0.8)',
+                        'rgba(250, 208, 196, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(102, 126, 234, 1)',
+                        'rgba(118, 75, 162, 1)',
+                        'rgba(237, 100, 166, 1)',
+                        'rgba(255, 154, 158, 1)',
+                        'rgba(250, 208, 196, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: value => value + '%'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Training Time Chart
+        new Chart(document.getElementById('timeChart'), {
+            type: 'horizontalBar',
+            data: {
+                labels: models,
+                datasets: [{
+                    label: 'Training Time (minutes)',
+                    data: trainingTimes,
+                    backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                    borderColor: 'rgba(118, 75, 162, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: value => value + 'm'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Scatter Chart
+        new Chart(document.getElementById('scatterChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Models',
+                    data: models.map((model, i) => ({
+                        x: parameters[i],
+                        y: accuracies[i],
+                        label: model
+                    })),
+                    backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    pointRadius: 8,
+                    pointHoverRadius: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw.label + ': ' + 
+                                       context.parsed.y.toFixed(1) + '% accuracy, ' +
+                                       context.parsed.x.toFixed(1) + 'M params';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Parameters (Millions)' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Accuracy (%)' },
+                        min: 60,
+                        max: 85
+                    }
+                }
+            }
+        });
+
+        // Efficiency Chart
+        new Chart(document.getElementById('efficiencyChart'), {
+            type: 'polarArea',
+            data: {
+                labels: models,
+                datasets: [{
+                    data: efficiency.map(e => e.toFixed(2)),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // Convergence Chart
+        const epochs = Array.from({length: 50}, (_, i) => i + 1);
+        new Chart(document.getElementById('convergenceChart'), {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: models.map((model, i) => ({
+                    label: model,
+                    data: epochs.map(e => Math.min(accuracies[i], 
+                        accuracies[i] * (1 - Math.exp(-e/15)) + Math.random() * 3)),
+                    borderColor: `hsl(${i * 60}, 70%, 50%)`,
+                    backgroundColor: `hsla(${i * 60}, 70%, 50%, 0.1)`,
+                    tension: 0.4,
+                    borderWidth: 2
+                }))
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Epoch' } },
+                    y: { 
+                        title: { display: true, text: 'Accuracy (%)' },
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Radar Chart
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Accuracy', 'Speed', 'Efficiency', 'Simplicity'],
+                datasets: models.slice(0, 3).map((model, i) => ({
+                    label: model,
+                    data: [
+                        accuracies[i],
+                        100 - trainingTimes[i],
+                        efficiency[i] * 10,
+                        100 - parameters[i] * 3
+                    ],
+                    borderColor: `hsl(${i * 120}, 70%, 50%)`,
+                    backgroundColor: `hsla(${i * 120}, 70%, 50%, 0.2)`,
+                    borderWidth: 2
+                }))
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Populate Table
+        const tbody = document.getElementById('resultsTable');
+        models.forEach((model, i) => {
+            const row = tbody.insertRow();
+            const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+            
+            row.innerHTML = `
+                <td><span class="rank-badge ${rankClass}">${i + 1}</span></td>
+                <td class="model-name">${model}</td>
+                <td>
+                    ${accuracies[i].toFixed(2)}%
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${accuracies[i]}%"></div>
+                    </div>
+                </td>
+                <td>${trainAccuracies[i].toFixed(2)}%</td>
+                <td>${parameters[i].toFixed(1)}M</td>
+                <td>${trainingTimes[i].toFixed(1)} min</td>
+                <td>${efficiency[i].toFixed(2)}</td>
+            `;
+        });
+    </script>
+</body>
+</html>
