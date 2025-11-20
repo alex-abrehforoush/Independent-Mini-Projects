@@ -16,22 +16,22 @@ A comprehensive video classification benchmark using 5 different RNN architectur
 
 ### View Full Reports
 
-- [**Classes 0-9** Report](./results/run_0_10/benchmark_report.html) 📊
-- [**Classes 10-19** Report](./results/run_10_20/benchmark_report.html) 📊
-- [**Classes 20-29** Report](./results/run_20_30/benchmark_report.html) 📊
-- [**Classes 30-39** Report](./results/run_30_40/benchmark_report.html) 📊
-- [**Classes 40-49** Report](./results/run_40_50/benchmark_report.html) 📊
+- [**Classes 0-9** Report](./benchmark_results/run_0_10_20251112_165812/benchmark_report.html) 📊
+- [**Classes 10-19** Report](./benchmark_results/run_10_20_20251112_215030/benchmark_report.html) 📊
+- [**Classes 20-29** Report](./benchmark_results/run_20_30_20251113_012744/benchmark_report.html) 📊
+- [**Classes 30-39** Report](./benchmark_results/run_30_40_20251113_044509/benchmark_report.html) 📊
+- [**Classes 40-49** Report](./benchmark_results/run_40_50_20251113_080252/benchmark_report.html) 📊
 
 ## 📈 Key Findings
 
 ### Best Performing Architecture
-![Accuracy Comparison](./results/run_0_10/comparison_bars.png)
+![Accuracy Comparison](./benchmark_results/run_0_10_20251112_165812/comparison_bars.png)
 
 ### Model Efficiency
-![Efficiency Score](./results/run_0_10/efficiency_score.png)
+![Efficiency Score](./benchmark_results/run_0_10_20251112_165812/efficiency_score.png)
 
 ### Complexity vs Performance
-![Performance Analysis](./results/run_0_10/params_vs_accuracy.png)
+![Performance Analysis](./benchmark_results/run_0_10_20251112_165812/params_vs_accuracy.png)
 
 ## 🏗️ Architecture Comparison
 
