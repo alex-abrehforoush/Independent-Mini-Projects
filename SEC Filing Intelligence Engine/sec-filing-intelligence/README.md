@@ -1,5 +1,11 @@
 # SEC Filing Intelligence Engine
 
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![LangChain](https://img.shields.io/badge/LangChain-0.3-green.svg)](https://python.langchain.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Accuracy](https://img.shields.io/badge/Revenue_Accuracy-100%25-success)](docs/evaluation_report.json)
+[![Cost](https://img.shields.io/badge/Cost-$0.002%2Fdoc-informational)](docs/architecture_diagram.md)
+
 An AI-powered system for extracting structured data from SEC 10-K filings using LLMs, built with production-grade governance controls for financial services environments.
 
 ## 🎯 Project Overview
