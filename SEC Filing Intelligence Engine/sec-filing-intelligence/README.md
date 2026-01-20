@@ -14,6 +14,17 @@ This project demonstrates:
 
 ---
 
+## 🖼️ Screenshots
+
+### Main Interface
+![Main Interface](docs/images/main_interface.png)
+
+### Revenue Breakdown
+![Revenue Analysis](docs/images/revenue_breakdown.png)
+
+### Governance Controls
+![Governance](docs/images/governance_tab.png)
+
 ## 🚀 Quick Start
 
 ### Prerequisites

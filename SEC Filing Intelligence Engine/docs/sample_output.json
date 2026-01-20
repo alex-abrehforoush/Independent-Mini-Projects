@@ -1,0 +1,57 @@
+{
+  "company": "Apple Inc.",
+  "filing_type": "10-K",
+  "fiscal_year": "2025",
+  "extraction_timestamp": "2026-01-20T16:07:09.862345",
+  "risks": {
+    "risks": [
+      {
+        "category": "Macroeconomic and Industry Risks",
+        "description": "Dependence on global and regional economic conditions, including slow growth, high unemployment, inflation, and currency fluctuations, which can adversely impact demand for products and services.",
+        "severity": "High"
+      },
+      {
+        "category": "Supply Chain Risks",
+        "description": "Reliance on outsourcing partners and single-source suppliers for critical components, leading to potential supply shortages and pricing risks.",
+        "severity": "High"
+      }
+    ]
+  },
+  "revenue": {
+    "segments": [
+      {
+        "segment_name": "iPhone",
+        "revenue_current": 209586.0,
+        "revenue_prior": 201183.0,
+        "percentage_change": 4.0
+      },
+      {
+        "segment_name": "Services",
+        "revenue_current": 109158.0,
+        "revenue_prior": 96169.0,
+        "percentage_change": 14.0
+      }
+    ],
+    "total_revenue": 416161.0
+  },
+  "financials": {
+    "metrics": [
+      {
+        "metric_name": "Net Income",
+        "value": "$113,442 million",
+        "fiscal_year": "2025"
+      },
+      {
+        "metric_name": "Gross Margin",
+        "value": "46.9%",
+        "fiscal_year": "2025"
+      }
+    ]
+  },
+  "metadata": {
+    "cost": {
+      "total_tokens": 13542,
+      "estimated_cost_usd": 0.0021
+    }
+  }
+}
