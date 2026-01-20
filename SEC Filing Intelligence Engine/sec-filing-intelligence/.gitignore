@@ -1,0 +1,33 @@
+# Environment
+../venv/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Output files (keep structure, ignore content)
+output/*.json
+logs/*.jsonl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (10-Ks can be large)
+data/*.htm
+data/*.html
+
+# Keep directory structure
+!output/.gitkeep
+!logs/.gitkeep
+!data/.gitkeep

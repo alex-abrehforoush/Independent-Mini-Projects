@@ -1,0 +1,38 @@
+{
+  "source": "Apple 10-K FY2025, manually verified",
+  "revenue_segments": {
+    "iPhone": {
+      "fy2025": 209586,
+      "fy2024": 201183,
+      "change_pct": 4.0
+    },
+    "Mac": {
+      "fy2025": 33708,
+      "fy2024": 29984,
+      "change_pct": 12.0
+    },
+    "iPad": {
+      "fy2025": 28023,
+      "fy2024": 26694,
+      "change_pct": 5.0
+    },
+    "Wearables": {
+      "fy2025": 35686,
+      "fy2024": 37005,
+      "change_pct": -4.0
+    },
+    "Services": {
+      "fy2025": 109158,
+      "fy2024": 96169,
+      "change_pct": 14.0
+    }
+  },
+  "total_revenue": 416161,
+  "key_risks": [
+    "Macroeconomic conditions",
+    "Geopolitical tensions",
+    "Supply chain dependencies",
+    "Competitive pressure",
+    "Regulatory compliance"
+  ]
+}
