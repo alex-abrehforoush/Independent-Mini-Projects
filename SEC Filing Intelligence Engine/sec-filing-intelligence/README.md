@@ -23,8 +23,8 @@ This project demonstrates:
 ### Installation
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/sec-filing-intelligence.git
-cd sec-filing-intelligence
+git clone https://github.com/alex-abrehforoush/Independent-Mini-Projects.git
+cd SEC Filing Intelligence Engine/sec-filing-intelligence
 
 # Create virtual environment
 python3 -m venv venv
