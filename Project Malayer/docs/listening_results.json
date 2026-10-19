@@ -1,0 +1,13 @@
+{
+  "votes": 40,
+  "raters": 1,
+  "treatment_wins": 18,
+  "control_wins": 5,
+  "ties": 17,
+  "treatment_preference": 0.783,
+  "wilson95": [
+    0.581,
+    0.903
+  ],
+  "sign_test_p": 0.010622024536132812
+}

@@ -1,0 +1,551 @@
+[
+ {
+  "file": "sb000_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "من قدر تو را می‌دانم",
+  "ipa": "man q1ˈadr tˈo rɑ midˈɑːnam",
+  "contested": [
+   {
+    "word": "قدر",
+    "gold": "q/dre1",
+    "espeak": "q/dr",
+    "kind": "homograph",
+    "llr": -3.57
+   }
+  ]
+ },
+ {
+  "file": "sb000_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "من قدر تو را می‌دانم",
+  "ipa": "man q1ˈadre tˈo rɑ midˈɑːnam",
+  "contested": [
+   {
+    "word": "قدر",
+    "gold": "q/dre1",
+    "espeak": "q/dr",
+    "kind": "homograph",
+    "llr": 5.2
+   }
+  ]
+ },
+ {
+  "file": "sb000_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "من قدر تو را می‌دانم",
+  "ipa": "man q1ˈadre tˈo rɑ midˈɑːnam",
+  "contested": [
+   {
+    "word": "قدر",
+    "gold": "q/dre1",
+    "espeak": "q/dr",
+    "kind": "homograph",
+    "llr": 5.2
+   }
+  ]
+ },
+ {
+  "file": "sb001_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "از قضای الهی به قدر الهی پناه می‌برم",
+  "ipa": "az q1azˈɑje elˈɑhi beː q1ˈadr elˈɑhi panˈɑh mibˈeram",
+  "contested": [
+   {
+    "word": "قضای",
+    "gold": "q/zay",
+    "espeak": "q/zaye",
+    "kind": "other vowel/consonant",
+    "llr": -4.1
+   },
+   {
+    "word": "قدر",
+    "gold": "q/d/re1",
+    "espeak": "q/dr",
+    "kind": "homograph",
+    "llr": -11.02
+   },
+   {
+    "word": "می‌برم",
+    "gold": "mib/r/m",
+    "espeak": "miber/m",
+    "kind": "other vowel/consonant",
+    "llr": 2.54
+   }
+  ]
+ },
+ {
+  "file": "sb001_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "از قضای الهی به قدر الهی پناه می‌برم",
+  "ipa": "az q1azˈɑje alˈe beː q1ˈadr alˈeje panˈɑh mibˈaram",
+  "contested": [
+   {
+    "word": "قضای",
+    "gold": "q/zay",
+    "espeak": "q/zaye",
+    "kind": "other vowel/consonant",
+    "llr": 2.52
+   },
+   {
+    "word": "قدر",
+    "gold": "q/d/re1",
+    "espeak": "q/dr",
+    "kind": "homograph",
+    "llr": -11.47
+   },
+   {
+    "word": "می‌برم",
+    "gold": "mib/r/m",
+    "espeak": "miber/m",
+    "kind": "other vowel/consonant",
+    "llr": 2.77
+   }
+  ]
+ },
+ {
+  "file": "sb001_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "از قضای الهی به قدر الهی پناه می‌برم",
+  "ipa": "az q1azˈɑje alˈe beː q1ˈadr alˈeje panˈɑh mibˈaram",
+  "contested": [
+   {
+    "word": "قضای",
+    "gold": "q/zay",
+    "espeak": "q/zaye",
+    "kind": "other vowel/consonant",
+    "llr": 2.52
+   },
+   {
+    "word": "قدر",
+    "gold": "q/d/re1",
+    "espeak": "q/dr",
+    "kind": "homograph",
+    "llr": -11.47
+   },
+   {
+    "word": "می‌برم",
+    "gold": "mib/r/m",
+    "espeak": "miber/m",
+    "kind": "other vowel/consonant",
+    "llr": 2.77
+   }
+  ]
+ },
+ {
+  "file": "sb002_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "به دست و صورتم کرم زدم",
+  "ipa": "beː dˈast vˈa surˈatam kˈaram zˈadam",
+  "contested": [
+   {
+    "word": "و",
+    "gold": "o",
+    "espeak": "v/",
+    "kind": "other vowel/consonant",
+    "llr": 9.82
+   },
+   {
+    "word": "کرم",
+    "gold": "kerem",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": -5.87
+   }
+  ]
+ },
+ {
+  "file": "sb002_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "به دست و صورتم کرم زدم",
+  "ipa": "beː dˈast ˈo surˈatam kˈaram zˈadam",
+  "contested": [
+   {
+    "word": "و",
+    "gold": "o",
+    "espeak": "v/",
+    "kind": "other vowel/consonant",
+    "llr": 10.4
+   },
+   {
+    "word": "کرم",
+    "gold": "kerem",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": -4.52
+   }
+  ]
+ },
+ {
+  "file": "sb002_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "به دست و صورتم کرم زدم",
+  "ipa": "beː dˈast ˈo surˈatam kˈaram zˈadam",
+  "contested": [
+   {
+    "word": "و",
+    "gold": "o",
+    "espeak": "v/",
+    "kind": "other vowel/consonant",
+    "llr": 10.4
+   },
+   {
+    "word": "کرم",
+    "gold": "kerem",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": -4.52
+   }
+  ]
+ },
+ {
+  "file": "sb003_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "از بزرگواری و کرم خداوند به ما نعمت زیادی رسیده",
+  "ipa": "az bozorɡvˈɑri vˈa kˈaram xodˈɑvand beː mɑ nˈeʔmat ziˈɑdi rˈesidˌeː",
+  "contested": [
+   {
+    "word": "کرم",
+    "gold": "k/r/me1",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": -7.55
+   },
+   {
+    "word": "ما",
+    "gold": "m/",
+    "espeak": "ma",
+    "kind": "other vowel/consonant",
+    "llr": -2.88
+   },
+   {
+    "word": "نعمت",
+    "gold": "ne@m/te1",
+    "espeak": "ne@m/t",
+    "kind": "ezafe",
+    "llr": -4.61
+   }
+  ]
+ },
+ {
+  "file": "sb003_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "از بزرگواری و کرم خداوند به ما نعمت زیادی رسیده",
+  "ipa": "az bozorɡvˈɑri vˈa kˈarame xodˈɑvand beː mɑ nˈeʔmate zijˈɑdi rˈesidˌeː",
+  "contested": [
+   {
+    "word": "کرم",
+    "gold": "k/r/me1",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": 5.48
+   },
+   {
+    "word": "ما",
+    "gold": "m/",
+    "espeak": "ma",
+    "kind": "other vowel/consonant",
+    "llr": -2.88
+   },
+   {
+    "word": "نعمت",
+    "gold": "ne@m/te1",
+    "espeak": "ne@m/t",
+    "kind": "ezafe",
+    "llr": 4.08
+   }
+  ]
+ },
+ {
+  "file": "sb003_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "از بزرگواری و کرم خداوند به ما نعمت زیادی رسیده",
+  "ipa": "az bozorɡvˈɑri vˈa kˈarame xodˈɑvand beː mɑ nˈeʔmate zijˈɑdi rˈesidˌeː",
+  "contested": [
+   {
+    "word": "کرم",
+    "gold": "k/r/me1",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": 5.48
+   },
+   {
+    "word": "ما",
+    "gold": "m/",
+    "espeak": "ma",
+    "kind": "other vowel/consonant",
+    "llr": -2.88
+   },
+   {
+    "word": "نعمت",
+    "gold": "ne@m/te1",
+    "espeak": "ne@m/t",
+    "kind": "ezafe",
+    "llr": 4.08
+   }
+  ]
+ },
+ {
+  "file": "sb004_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "کرم خاکی باعث می‌شود گل‌ها بهتر رشد کنند",
+  "ipa": "kˈaram xˈɑki bˈɑʔes miʃavˈad ɡˈolhɑ bˈehtar rˈoʃd kˈonand",
+  "contested": [
+   {
+    "word": "کرم",
+    "gold": "kerme1",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": -14.05
+   }
+  ]
+ },
+ {
+  "file": "sb004_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "کرم خاکی باعث می‌شود گل‌ها بهتر رشد کنند",
+  "ipa": "kˈerme xˈɑki bˈɑʔes miʃavˈad ɡˈolhɑ bˈehtar rˈoʃd kˈonand",
+  "contested": [
+   {
+    "word": "کرم",
+    "gold": "kerme1",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": 12.1
+   }
+  ]
+ },
+ {
+  "file": "sb004_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "کرم خاکی باعث می‌شود گل‌ها بهتر رشد کنند",
+  "ipa": "kˈerme xˈɑki bˈɑʔes miʃavˈad ɡˈolhɑ bˈehtare rˈoʃd kˈonand",
+  "contested": [
+   {
+    "word": "کرم",
+    "gold": "kerme1",
+    "espeak": "k/r/m",
+    "kind": "homograph",
+    "llr": 11.13
+   }
+  ]
+ },
+ {
+  "file": "sb005_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "نشست سران سیاسی کشورها به خوبی پیش رفت",
+  "ipa": "neʃˈast sarˈɑn siˈɑsi keʃvˈarhɑ beː xˈuːbi pˈiʃ rˈaft",
+  "contested": [
+   {
+    "word": "نشست",
+    "gold": "ne$/ste1",
+    "espeak": "ne$/st",
+    "kind": "homograph",
+    "llr": -9.58
+   },
+   {
+    "word": "سران",
+    "gold": "s/rane1",
+    "espeak": "s/ran",
+    "kind": "ezafe",
+    "llr": -7.01
+   },
+   {
+    "word": "سیاسی",
+    "gold": "siyasiye1",
+    "espeak": "siasi",
+    "kind": "ezafe",
+    "llr": -5.16
+   }
+  ]
+ },
+ {
+  "file": "sb005_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "نشست سران سیاسی کشورها به خوبی پیش رفت",
+  "ipa": "neʃˈast sarˈɑne sijˈɑsije keʃvˈarhɑ beː xˈuːbi pˈiʃ rˈaft",
+  "contested": [
+   {
+    "word": "نشست",
+    "gold": "ne$/ste1",
+    "espeak": "ne$/st",
+    "kind": "homograph",
+    "llr": -9.2
+   },
+   {
+    "word": "سران",
+    "gold": "s/rane1",
+    "espeak": "s/ran",
+    "kind": "ezafe",
+    "llr": 3.67
+   },
+   {
+    "word": "سیاسی",
+    "gold": "siyasiye1",
+    "espeak": "siasi",
+    "kind": "ezafe",
+    "llr": -3.02
+   }
+  ]
+ },
+ {
+  "file": "sb005_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "نشست سران سیاسی کشورها به خوبی پیش رفت",
+  "ipa": "neʃˈast sarˈɑne sijˈɑsije keʃvˈarhɑ beː xˈuːbi pˈiʃ rˈaft",
+  "contested": [
+   {
+    "word": "نشست",
+    "gold": "ne$/ste1",
+    "espeak": "ne$/st",
+    "kind": "homograph",
+    "llr": -8.83
+   },
+   {
+    "word": "سران",
+    "gold": "s/rane1",
+    "espeak": "s/ran",
+    "kind": "ezafe",
+    "llr": 3.55
+   },
+   {
+    "word": "سیاسی",
+    "gold": "siyasiye1",
+    "espeak": "siasi",
+    "kind": "ezafe",
+    "llr": -4.07
+   }
+  ]
+ },
+ {
+  "file": "sb006_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "او میوه را نشست ولی آن را خورد",
+  "ipa": "ˈuː mˈiveː rɑ neʃˈast vˈali ɑn rɑ xˈord",
+  "contested": [
+   {
+    "word": "را",
+    "gold": "r/",
+    "espeak": "ra",
+    "kind": "other vowel/consonant",
+    "llr": -2.12
+   },
+   {
+    "word": "نشست",
+    "gold": "n/$ost",
+    "espeak": "ne$/st",
+    "kind": "homograph",
+    "llr": -10.71
+   },
+   {
+    "word": "را",
+    "gold": "r/",
+    "espeak": "ra",
+    "kind": "other vowel/consonant",
+    "llr": -2.61
+   }
+  ]
+ },
+ {
+  "file": "sb006_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "او میوه را نشست ولی آن را خورد",
+  "ipa": "ˈuː mˈiveː rɑ naʃˈost vˈali ɑn rɑ xˈord",
+  "contested": [
+   {
+    "word": "را",
+    "gold": "r/",
+    "espeak": "ra",
+    "kind": "other vowel/consonant",
+    "llr": -2.8
+   },
+   {
+    "word": "نشست",
+    "gold": "n/$ost",
+    "espeak": "ne$/st",
+    "kind": "homograph",
+    "llr": -5.04
+   },
+   {
+    "word": "را",
+    "gold": "r/",
+    "espeak": "ra",
+    "kind": "other vowel/consonant",
+    "llr": -2.65
+   }
+  ]
+ },
+ {
+  "file": "sb006_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "او میوه را نشست ولی آن را خورد",
+  "ipa": "ˈuː mˈiveː rɑ naʃˈost vˈali ɑn rɑ xˈord",
+  "contested": [
+   {
+    "word": "را",
+    "gold": "r/",
+    "espeak": "ra",
+    "kind": "other vowel/consonant",
+    "llr": -2.16
+   },
+   {
+    "word": "نشست",
+    "gold": "n/$ost",
+    "espeak": "ne$/st",
+    "kind": "homograph",
+    "llr": -4.5
+   },
+   {
+    "word": "را",
+    "gold": "r/",
+    "espeak": "ra",
+    "kind": "other vowel/consonant",
+    "llr": -2.44
+   }
+  ]
+ },
+ {
+  "file": "sb007_espeak.wav",
+  "system": "espeak-ng (stock)",
+  "text": "دلم هری ریخت",
+  "ipa": "dˈelam hˌari rˈixt",
+  "contested": [
+   {
+    "word": "هری",
+    "gold": "horri",
+    "espeak": "h/ri",
+    "kind": "homograph",
+    "llr": -10.96
+   }
+  ]
+ },
+ {
+  "file": "sb007_tagger.wav",
+  "system": "tagger, full sentence",
+  "text": "دلم هری ریخت",
+  "ipa": "dˈelam hˌorri rˈixt",
+  "contested": [
+   {
+    "word": "هری",
+    "gold": "horri",
+    "espeak": "h/ri",
+    "kind": "homograph",
+    "llr": -3.18
+   }
+  ]
+ },
+ {
+  "file": "sb007_tagger_k1.wav",
+  "system": "tagger, streaming k=1",
+  "text": "دلم هری ریخت",
+  "ipa": "dˈelam hˌorri rˈixt",
+  "contested": [
+   {
+    "word": "هری",
+    "gold": "horri",
+    "espeak": "h/ri",
+    "kind": "homograph",
+    "llr": 2.31
+   }
+  ]
+ }
+]
