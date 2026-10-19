@@ -1,0 +1,33 @@
+[project]
+name = "persian-tts"
+version = "0.1.0"
+description = "Streaming, pronunciation-aware Persian TTS: ezafe/vowel restoration as alignment-preserving tagging, audio-level evaluation, and a monitored serving stack."
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.4",
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "soundfile",
+    "scipy",
+    "tqdm",
+    "jiwer",
+    "matplotlib",
+    "piper-tts>=1.8",
+    "onnxruntime",
+    "huggingface_hub",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

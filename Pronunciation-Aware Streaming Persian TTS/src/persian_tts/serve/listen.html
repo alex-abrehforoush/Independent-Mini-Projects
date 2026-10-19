@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Persian TTS Listening Test</title>
+<style>
+  :root { --bg:#fafaf8; --fg:#1d1d1b; --muted:#6b6b66; --card:#ffffff; --line:#e4e4df; --accent:#2a6fdb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161615; --fg:#ececea; --muted:#a3a39d; --card:#1f1f1d; --line:#33332f; --accent:#6aa0ff; }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width:640px; margin:0 auto; padding:24px 16px; }
+  h1 { font-size:1.25rem; margin:0 0 4px; }
+  p.lead { color:var(--muted); margin:0 0 20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  .text { direction:rtl; font-size:1.35rem; margin:4px 0 16px; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .pair div { border:1px solid var(--line); border-radius:8px; padding:10px; }
+  audio { width:100%; }
+  .buttons { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+  button { flex:1; min-width:120px; padding:10px; border-radius:8px; border:1px solid var(--line);
+           background:var(--card); color:var(--fg); font:inherit; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  .meta { color:var(--muted); font-size:.9rem; margin-top:12px; }
+  @media (max-width:520px) { .pair { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Which reading is correct?</h1>
+  <p class="lead">Two systems read the same sentence. Pick the one whose <em>pronunciation</em> (vowels, ezafe, homograph) is right. Order is randomized and blind.</p>
+  <div class="card" id="card">Loading…</div>
+  <p class="meta" id="meta"></p>
+</main>
+<script>
+const rater = new URLSearchParams(location.search).get("rater") || "anon";
+let token = null;
+async function next() {
+  const r = await fetch(`/listen/item?rater=${encodeURIComponent(rater)}`).then(r => r.json());
+  const card = document.getElementById("card");
+  if (r.done) { card.textContent = "All items rated — thank you."; return; }
+  token = r.token;
+  card.innerHTML = `
+    <div class="text"></div>
+    <div class="pair">
+      <div><strong>A</strong><audio controls src="data:audio/wav;base64,${r.left}"></audio></div>
+      <div><strong>B</strong><audio controls src="data:audio/wav;base64,${r.right}"></audio></div>
+    </div>
+    <div class="buttons">
+      <button data-c="left">A is correct</button>
+      <button data-c="same">Same / both wrong</button>
+      <button data-c="right">B is correct</button>
+    </div>`;
+  card.querySelector(".text").textContent = r.text;
+  card.querySelectorAll("button").forEach(b => b.onclick = () => vote(b.dataset.c));
+  document.getElementById("meta").textContent = `${r.remaining} items remaining · rater: ${rater}`;
+}
+async function vote(choice) {
+  await fetch("/listen/vote", {method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({rater, token, choice})});
+  next();
+}
+next();
+</script>
+</body>
+</html>
