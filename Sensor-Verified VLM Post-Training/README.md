@@ -9,14 +9,13 @@
 
 <p align="center"><img src="docs/figures/val_total.png" width="820"></p>
 
-**Findings so far.** SFT, GRPO and DPO have been run on Qwen3-VL-4B and 8B (DPO on 4B so far).
-SFT adds 0.12–0.14 reward over zero-shot. GRPO and DPO on top of SFT do **not** improve on a new
-person, and [Section 5](#5-results) shows why: GRPO only sharpened sampling toward answers SFT already
-gave greedily, and both methods amplified a hand-use habit of the training participants.
+**Findings.** SFT, GRPO and DPO were run on Qwen3-VL-4B and 8B (DPO on 4B). SFT adds 0.12–0.14
+reward over zero-shot on a person the model has never seen. GRPO and DPO on top of SFT do **not**
+improve on that person, and [Section 5](#5-results) shows why: GRPO only sharpened sampling toward
+answers SFT already gave greedily, and both methods amplified a hand-use habit of the training
+participants.
 
-**Status: in progress.** Next: test-set and Quest 3 (new people, new camera) evaluation, DPO at 8B,
-the fixes listed in [Section 5.4](#54-next), and the 2B runs on a local 4 GB GPU. Test-set numbers are
-held back until the final models are fixed. Validation (one held-out participant, 332 samples):
+Validation (one held-out participant, 332 samples):
 
 | | Total reward | Hands (8 per-frame bits) | Object name | Point on object |
 |---|---|---|---|---|
@@ -28,7 +27,10 @@ held back until the final models are fixed. Validation (one held-out participant
 | Qwen3-VL-8B + SFT | **0.638** | **0.78** | **0.54** | 0.37 |
 | Qwen3-VL-8B + SFT + GRPO | 0.629 | 0.76 | 0.54 | 0.36 |
 
-Full tables, with paired confidence intervals: [docs/results_val.md](docs/results_val.md).
+Full tables, with paired confidence intervals: [docs/results_val.md](docs/results_val.md). All
+results here are on this validation participant, plus a probe on training participants
+([Section 5.2](#52-grpo-sharpened-sampling-it-did-not-learn-new-answers)); the test participant and
+the Quest 3 set were built but kept out of every experiment, so they remain clean held-out sets.
 
 ---
 
@@ -120,9 +122,10 @@ the vision tower stays frozen) — [`src/sensor_vlm/train.py`](src/sensor_vlm/tr
   prompts); reference log-probs are computed once at pair time, so training needs no second model.
   β = 0.1, 2 epochs. Same reward, similar sample budget as GRPO: offline preferences vs online RL.
 
-**Compute.** 2B runs locally on a 4 GB GTX 1650; 4B and 8B run on Kaggle's free T4 ×2 (fp16 with loss
-scaling), within a 6 GPU-hour weekly quota — both GPUs always run in parallel
-([`kaggle/run_t4.py`](kaggle/run_t4.py)).
+**Compute.** The data pipeline, the 2B zero-shot baseline and end-to-end tests of all three methods
+at 2B ran on a local 4 GB GTX 1650. The 4B and 8B runs ran on Kaggle's free T4 ×2 (fp16 with loss
+scaling) within a 6 GPU-hour weekly quota, with both GPUs always busy in parallel
+([`kaggle/run_t4.py`](kaggle/run_t4.py)): SFT 1.8 h (4B) and 2.3 h (8B), GRPO and DPO 2.6 h together.
 
 ## 5. Results
 
@@ -192,7 +195,9 @@ a global shift, costing 3.7 points of hand accuracy, the clearest effect in the 
 The gap that matters is between people: the same SFT 4B model scores 0.805 on training participants
 (on prompts it saw once during SFT, so partly memorized) and 0.624 on a new one.
 
-### 5.4 Next
+### 5.4 What would make RL help here
+
+The diagnosis points to three changes, none of them tried here:
 
 - RL where SFT has not already fit: hold participants out of SFT and use them only for GRPO, or keep
   only prompts the SFT model gets wrong.
@@ -200,7 +205,6 @@ The gap that matters is between people: the same SFT 4B model scores 0.805 on tr
   than the greedy one.
 - DPO with pairs balanced between missed and invented holds, or with a likelihood term on the chosen
   answer.
-- Test and Quest 3 (new people, new camera) evaluation of all models.
 
 SFT training loss:
 
@@ -216,8 +220,9 @@ SFT training loss:
 - **Laptop power brake.** Under sustained load the GPU cycles ~25 s at 1.6 GHz then 40–60 s at 348 MHz
   with no throttle reason reported (on AC, while charging) — about half the throughput.
 - **`generate()` mutates cached vision features** passed as `mm_encoder_outputs` (it expands them in
-  place for `num_return_sequences`), so the next training step saw 4× the image tokens. Fixed by
-  passing a copy.
+  place for `num_return_sequences`). In the memory probe ([`scripts/probe_memory.py`](scripts/probe_memory.py)),
+  which reuses one set of features for a rollout and the update after it, the update then saw 4× the
+  image tokens. Fixed by passing a copy.
 - **A shadowed variable** (`h` for image height, reused as the hand index) silently rotated every Quest
   3 box by the wrong height from frame 3 on; a mask-inside-box test on a real clip caught it before any
   data was built.
@@ -232,15 +237,19 @@ SFT training loss:
 make setup          # venv + package (+ hand_tracking_toolkit from GitHub)
 make data           # stream HOT3D-Clips (Aria), ~1.5 h, ~2 GB kept
 make tasks          # contact labels -> 4-frame tile tasks in data/tasks
-make eval           # zero-shot Qwen3-VL-2B on val
-python scripts/03_sft.py  --out runs/sft_2b                                   # local 2B
+make eval           # zero-shot Qwen3-VL-2B on val (fits a 4 GB GPU)
+
+# 4B / 8B on Kaggle T4 x2: set PLAN in kaggle/run_t4.py ("sft", then "grpo", then "probe"),
+# bundle, upload (see the script's docstring) and download each version's runs/
+python scripts/05_kaggle_bundle.py --user <kaggle-user> [--adapter-runs <run dirs>]
+
+python scripts/07_report.py --split val                                       # tables + figures
+python scripts/07_report.py --split train_probe --base-split train             # sharpening check
+
+# every script also runs locally at any size that fits (--model), e.g. 2B on a 4 GB GPU:
+python scripts/03_sft.py  --out runs/sft_2b
 python scripts/04_grpo.py --adapter runs/sft_2b/adapter --out runs/grpo_2b
 python scripts/06_dpo.py  --adapter runs/sft_2b/adapter --out runs/dpo_2b
-python scripts/05_kaggle_bundle.py --user <kaggle-user>                       # 4B / 8B on Kaggle T4 x2
-python scripts/07_report.py --split val                                       # tables + figures
-python scripts/02_evaluate.py --adapter runs/sft_2b/adapter --out runs/sft_2b --split train \
-    --ids-file kaggle/train_probe_ids.txt --name train_probe                    # sharpening check
-python scripts/07_report.py --split train_probe --base-split train
 ```
 
 ## 8. Relation to prior work
@@ -261,8 +270,11 @@ python scripts/07_report.py --split train_probe --base-split train
 
 ## 9. Limitations
 
-- One validation and one test participant (HOT3D's Aria clips cover 9 people); the Quest 3 set adds
-  4 unseen people on a different camera.
+- Results rest on one validation participant (332 samples; HOT3D's Aria clips cover only 9 people).
+  The test participant (542 samples) and the Quest 3 set (1,524 samples, 4 unseen people, different
+  camera) are built and untouched, but not yet evaluated.
+- DPO was run at 4B only, and the 2B scale only zero-shot: the free GPU quota went to the 4B/8B runs
+  and the sharpening probe.
 - Four frames per sample, not video: grasp timing is only resolved to the tile spacing (0.4–1.6 s).
 - "Manipulation" requires the object to move during the contact; holding an object that never moves in
   the clip is not labeled.
